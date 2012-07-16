@@ -1,0 +1,234 @@
+<!doctype html>  
+<html lang="en">
+	
+	<head>
+		<meta charset="utf-8">
+		
+		<title>Junior Training - Basics</title>
+
+		<meta name="description" content="An easy to use CSS 3D slideshow tool for quickly creating good looking HTML presentations.">
+		<meta name="author" content="Hakim El Hattab">
+
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+		
+		<link href='http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+		
+		<link rel="stylesheet" href="css/reset.css">
+		<link rel="stylesheet" href="css/main.css">
+		<link rel="stylesheet" href="css/print.css" type="text/css" media="print">
+
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+	</head>
+	
+	<body>
+		
+		<div class="reveal">
+
+			<!-- Used to fade in a background when a specific slide state is reached -->
+			<div class="state-background"></div>
+			
+			<!-- Any section element inside of this container is displayed as a slide -->
+			<div class="slides">
+				<section>
+					<h1>Junior Training</h1>
+					<h3 class="inverted">Java Basics</h3>
+					<p>
+						<i><small>- <a href="email:lajos_papp@epam.com">Lajos Papp</a> </small></i>
+					</p>
+				</section>
+				
+				<section>
+					<h2>Java environment</h2>
+                    <ul>
+                        <li>jdk 1.6.x</li>
+                        <li>environment variables (only system variable, no user):
+                            <ul>
+                                <li>JAVA_HOME</li>
+                                <li>PATH
+                                    <ul>
+                                        <li>JAVA_HOME should be first</li>
+                                        <li>QTSYSTEM (delete)</li>
+                                    </ul>
+                                </li>
+                                <li>CLASSPATH (delete)</li>
+                                <li>QTJAVA (delete)</li>
+                                
+                            </ul>
+                        <li>no jre (controll panel/programs: uninstall)</li>
+                        <li>no space in dirnames (ever)</li>
+                        <li>total cmd restart</li>
+                    </ul>
+				</section>
+				
+
+				<section>
+					<h2>Handmade Classes</h2>
+                    <ul>
+                        <li>notepad</li>
+                        <li>javac</li>
+                        <li>java</li>
+                    </ul>
+				</section>
+
+                <section>
+                    <h2>directory structure</h2>
+                    <ul>
+                        <li>src</li>
+                        <li>bin</li>
+                        <li>lib</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>javac otions</h2>
+                    <ul>
+                        <li class="fragment">-d: output dir</li>
+                        <li class="fragment">-classpath</li>
+                        <li class="fragment">-cp</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>logging</h2>
+                        <ul>
+                            <li>jdk logging (JUL)</li>
+                            <li>log4j</li>
+                            <li>apache commons logging</li>
+                            <li>slf4j</li>
+                        </ul>
+                </section>
+                
+                <section>
+                    <h2>logging demo</h2>
+                    <h3>start with log4j</h3>
+                    <ol>
+                        <li>use log4j api</li>
+                        <li>play with rootlevel</li>
+                        <li>multiple appenders</li>
+                    </ol>
+                </section>
+                
+                <section>
+                    <h2>bridge log4j to slf4j</h2>
+                        <ul>
+                            <li>remove log4j.jar</li>
+                            <li>add log4j-over-slf4j.jar</li>
+                            <li>add slf4j-api</li>
+                            <li>add slf4j-simple</li>
+                        </ul>
+                </section>
+                
+                <section>
+                    <h2>bridge everythin to slf4j</h2>
+                    <p>Use Case: Your code directlu using <a href="#">slf4j</a>, you use spring, which needs <a href="#">apache common</a>.
+                        The whole application is running on Tomcat which needs <a href="#">java.util.logging</a>. Welcome in logging/classpath hell!
+                    </p>
+                    <h3>steps:</h3>
+                        <ul>
+                            <li>remove log4j.jar</li>
+                            <li>add log4j-over-slf4j.jar</li>
+                            <li>add slf4j-api</li>
+                            <li>add slf4j-simple</li>
+                        </ul>
+                </section>
+                
+                
+                <section>
+                    <h2>maven</h2>
+                        <ul>
+                            <li>convention over configuration</li>
+                            <li>directory structure</li>
+                            <li>lifecycle / goals</li>
+                        </ul>
+                </section>
+                
+<!--
+					<pre><code contenteditable>
+function linkify( selector ) {
+  if( supports3DTransforms ) {
+    
+    var nodes = document.querySelectorAll( selector );
+
+    for( var i = 0, len = nodes.length; i < len; i++ ) {
+      var node = nodes[i];
+
+      if( !node.className ) ) {
+        node.className += ' roll';
+      }
+    };
+  }
+}
+					</code></pre>
+
+
+
+-->				
+
+				
+			</div>
+
+			<!-- The navigational controls UI -->
+			<aside class="controls">
+				<a class="left" href="#">&#x25C4;</a>
+				<a class="right" href="#">&#x25BA;</a>
+				<a class="up" href="#">&#x25B2;</a>
+				<a class="down" href="#">&#x25BC;</a>
+			</aside>
+
+			<!-- Displays presentation progress, max value changes via JS to reflect # of slides -->
+			<div class="progress"><span></span></div>
+			
+		</div>
+
+		<!-- Optional libraries for code syntax highlighting and classList support in IE9 -->
+		<script src="lib/js/head.min.js"></script>
+
+		<script>
+			// Load the main reveal.js script
+			head.js( 'js/reveal.js', function() {
+				// Parse the query string into a key/value object
+				var query = {};
+
+				location.search.replace( /[A-Z0-9]+?=(\w*)/gi, function(a) {
+					query[ a.split( '=' ).shift() ] = a.split( '=' ).pop();
+				} );
+
+				// Fires when a slide with data-state=customevent is activated
+				Reveal.addEventListener( 'customevent', function() {
+					console.log( '"customevent" has fired' );
+				} );
+
+				// Fires each time a new slide is activated
+				Reveal.addEventListener( 'slidechanged', function( event ) {
+					// event.previousSlide, event.currentSlide, event.indexh, event.indexv
+				} );
+
+				// Full list of configuration options available here:
+				// https://github.com/hakimel/reveal.js#configuration
+				Reveal.initialize({
+					controls: true,
+					progress: true,
+					history: true,
+
+					theme: query.theme || 'default', // default/neon/beige
+					transition: query.transition || 'default' // default/cube/page/concave/linear(2d)
+				});
+			} );
+			
+			// Load third party scripts
+			head.js( 'lib/js/classList.js' );
+			head.js( 'lib/js/highlight.js', function() {
+				// Fire off syntax highlighting for potential code samples in the slides
+				hljs.initHighlightingOnLoad();
+			} );
+
+			// If we're runnning the notes server we need to include some additional JS
+			// TODO Is there a better way to determine if we're running the notes server?
+			if( window.location.host === 'localhost:1947' ) {
+				head.js( 'socket.io/socket.io.js', 'plugin/speakernotes/client.js' );
+			}
+		</script>
+		
+	</body>
+</html>
