@@ -142,7 +142,69 @@
                             <li>lifecycle / goals</li>
                         </ul>
                 </section>
-                
+                <section>
+                    <h2>jar</h2>
+                    <p>ordinary zip with meta data (META-INF/MANIFEST.MF)</p>
+                    <h3>command line options</h3>
+                    <ul>
+                        <li>action
+                            <ul>
+                                <li>c - create</li>
+                                <li>x - extract</li>
+                                <li>u - update</li>
+                                <li>t - 'tartalom'</li>
+                            </ul>
+                            
+                        </li>
+                        <li>v - verbose</li>
+                        <li>f - output file</li>
+                    </ul>
+                </section>
+                <section>
+                    <h2>Executable jar</h2>
+                    <pre><code contenteditable>
+java -cp a.jar:b.jar:classes org.training.MainClass
+java -jar myapp.jar
+                    </code></pre>
+                    <p>executable jar specifies the mainclass in: MANIFEST.MF</p>
+                    <ul>
+                        <li class="fragment">Main-Class: com.epam.junior.LunchTime</li>
+                        <li class="fragment">Class-Path: logback-classic-1.0.1.jar logback-core-1.0.6.jar</li>
+                    </ul>
+                </section>
+                <section>
+                    <h2>executable jar by hand</h2>
+                    <p>lets create the executable jar by hand (jar.exe)</p>
+                    <ul>
+                        <li class="fragment">jar cvfm myapp.jar mymanifest.txt</li>
+                        <li class="fragment">jar cvfm myapp.jar mymanifest.txt -C target</li>
+                    </ul>
+                </section>
+                <!-- <section>
+                    <h2></h2>
+                    <ul>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                    </ul>
+                </section>
+                <section>
+                    <h2></h2>
+                    <ul>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                    </ul>
+                </section>
+                <section>
+                    <h2></h2>
+                    <ul>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                    </ul>
+                </section>
+                 -->
 <!--
 					<pre><code contenteditable>
 function linkify( selector ) {
