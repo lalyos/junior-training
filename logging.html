@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Title</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <style type="text/css">
+
+    @import url(http://fonts.googleapis.com/css?family=Droid+Serif);
+    @import url(http://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+
+    body { font-family: 'Droid Serif'; }
+    h1, h2, h3 {
+      font-family: 'Yanone Kaffeesatz';
+      font-weight: 400;
+      margin-bottom: 0;
+      margin-top: 10px;
+    }
+    h1 { font-size: 3.5em; }
+    h2 { font-size: 3em; }
+    h3 { font-size: 1.6em; }
+
+    code {
+        -moz-border-radius: 5px;
+        -web-border-radius: 5px;
+        background: #e7e8e2;
+        border-radius: 5px;
+        //font-size: 16px;
+      }
+  
+
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
+
+# Title
+
+---
+class: middle
+
+# LOGBACK
+
+### pom.xml
+``` xml
+<dependency>
+  <groupId>ch.qos.logback</groupId>
+  <artifactId>logback-classic</artifactId>
+  <version>1.0.13</version>
+</dependency>
+```
+
+```java
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public class Whatever {
+  Logger logger = LoggerFactory.getLogger(clazz);
+  ...
+  
+  logger.debug("processing next restaurant: {}", restaurant);
+}
+```
+
+### logback.xml
+``` xml
+<configuration scan="true" scanPeriod="3 seconds">
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder><pattern>%d{HH:mm:ss.SSS} %-5level %logger{15} - %msg%n</pattern></encoder>
+  </appender>
+  
+  <root level="trace">
+    <appender-ref ref="STDOUT" />
+  </root>  
+</configuration>
+```
+---
+class: middle
+
+# Log4j
+
+### pom.xml
+``` xml
+<dependency>
+	<groupId>log4j</groupId>
+	<artifactId>log4j</artifactId>
+	<version>1.2.17</version>
+</dependency>
+```
+
+```java
+import org.apache.log4j.Logger;
+
+public class Whatever {
+  private Logger logger = Logger.getLogger(App.class);
+  ...
+  
+  logger.info("next restaurant: " + restaurant);
+}
+```
+
+### log4j.properties
+```
+log4j.logger.com.eggs=INFO, stdout
+
+log4j.appender.stdout=org.apache.log4j.ConsoleAppender
+log4j.appender.stdout.Target=System.out
+log4j.appender.stdout.layout=org.apache.log4j.PatternLayout
+log4j.appender.stdout.layout.ConversionPattern=%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1}:%L - %m%n
+```
+---
+# Java Util Logging (JUL)
+
+### No dependency need, part of jdk
+
+``` java
+import java.util.logging.Logger;
+
+public class Whatever {
+    private Logger logger = Logger.getLogger(getClass().getName());
+    ...
+    logger.fine("Number of monkeys: " + 5)
+
+```
+
+### Configuration
+defult config is at: `$JAVA_HOME/lib/logging.properties` but its better to create you own config and
+specify it via: `-Djava.util.logging.config.file=/etc/my-logging.properies`
+
+```
+handlers= java.util.logging.ConsoleHandler
+.level= INFO
+
+java.util.logging.ConsoleHandler.level = FINE
+java.util.logging.ConsoleHandler.formatter = java.util.logging.SimpleFormatter
+
+com.eggs.level = FINE
+
+```
+
+### Output
+
+
+---
+
+# Introduction
+
+    </textarea>
+    <script src="http://gnab.github.io/remark/downloads/remark-0.5.7.min.js" type="text/javascript">
+    </script>
+    <script type="text/javascript">
+      var slideshow = remark.create({
+//        highlightStyle: 'monokai'
+// highlightStyle: 'zenburn'
+// highlightStyle: 'vs'
+ highlightStyle: 'tomorrow-night'
+        
+      });
+    </script>
+  </body>
+</html>
