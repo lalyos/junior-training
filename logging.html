@@ -32,49 +32,29 @@
   </head>
   <body>
     <textarea id="source">
+class: middle,center
 
-class: center, middle
+# Java Logging
 
-# Title
-
+### The logging mess
 ---
+
 class: middle
 
-# LOGBACK
+# History
 
-### pom.xml
-``` xml
-<dependency>
-  <groupId>ch.qos.logback</groupId>
-  <artifactId>logback-classic</artifactId>
-  <version>1.0.13</version>
-</dependency>
-```
+- log4j:1999
+- Java Util Logging (JUL) in 2002
+- Apache Commons Logging (ACL) in 2002 - first facade
+- Simple Logging Facade for Java (slf4j) in 2005
+- Logback - 2006
 
-```java
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+???
 
-public class Whatever {
-  Logger logger = LoggerFactory.getLogger(clazz);
-  ...
-  
-  logger.debug("processing next restaurant: {}", restaurant);
-}
-```
+[Logging Mess](http://java.dzone.com/articles/logging-mess)
 
-### logback.xml
-``` xml
-<configuration scan="true" scanPeriod="3 seconds">
-  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-    <encoder><pattern>%d{HH:mm:ss.SSS} %-5level %logger{15} - %msg%n</pattern></encoder>
-  </appender>
-  
-  <root level="trace">
-    <appender-ref ref="STDOUT" />
-  </root>  
-</configuration>
-```
+Logging Yoda master: Ceki Gülcü
+
 ---
 class: middle
 
@@ -89,6 +69,7 @@ class: middle
 </dependency>
 ```
 
+### api usage
 ```java
 import org.apache.log4j.Logger;
 
@@ -112,7 +93,7 @@ log4j.appender.stdout.layout.ConversionPattern=%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1
 ---
 # Java Util Logging (JUL)
 
-### No dependency need, part of jdk
+### No external dependency as part of jdk since 1.4
 
 ``` java
 import java.util.logging.Logger;
@@ -141,10 +122,122 @@ com.eggs.level = FINE
 
 ### Output
 
+2 lines for each `logger.xxx()` call.
+
+```
+nov. 02, 2013 4:41:33 DU com.eggs.impl.YamlFileMenuRepositoryReader read
+INFO: reading YAML: menus.yml
+```
+---
+# SLF4J-API
+
+### pom.xml
+``` xml
+<dependency>
+	<groupId>org.slf4j</groupId>
+	<artifactId>slf4j-api</artifactId>
+	<version>1.7.5</version>
+</dependency>
+```
+
+### api usage
+```java
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public class Whatever {
+  Logger logger = LoggerFactory.getLogger(clazz);
+  ...
+  
+  logger.debug("processing next restaurant: {}", restaurant);
+}
+```
+--
+### Default implementatios is `org.slf4j.helpers.NOPLoggerFactory`
+
+## SLF4J-SIMPLE
+
+``` xml
+<dependency>
+	<groupId>org.slf4j</groupId>
+	<artifactId>slf4j-simple</artifactId>
+	<version>1.7.5</version>
+</dependency>
+```
 
 ---
+class: middle
 
-# Introduction
+# LOGBACK
+
+### pom.xml
+``` xml
+<dependency>
+  <groupId>ch.qos.logback</groupId>
+  <artifactId>logback-classic</artifactId>
+  <version>1.0.13</version>
+</dependency>
+```
+
+### api usage
+```java
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public class Whatever {
+  Logger logger = LoggerFactory.getLogger(clazz);
+  ...
+  
+  logger.debug("processing next restaurant: {}", restaurant);
+}
+```
+
+### logback.xml
+``` xml
+<configuration scan="true" scanPeriod="3 seconds">
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder><pattern>%d{HH:mm:ss.SSS} %-5level %logger{15} - %msg%n</pattern></encoder>
+  </appender>
+  
+  <root level="trace">
+    <appender-ref ref="STDOUT" />
+  </root>  
+</configuration>
+```
+---
+# Bridge everything to logback
+
+- remove all external depencencies: log4j, acl, ...
+- add bridges: XXX-over-slf4j
+- add logback as slf4 implementation
+
+```xml
+<dependency>
+	<groupId>org.slf4j</groupId>
+	<artifactId>log4j-over-slf4j</artifactId>
+	<version>1.7.5</version>
+</dependency>
+```
+## Java Util Logging is special
+
+- can't be removed from the classpath
+- remove the `Handler` (Appender) from the root logger
+- add jul-*to*-slf4j
+- kickstart the bridge
+
+```xml
+<dependency>
+	<groupId>org.slf4j</groupId>
+	<artifactId>jul-to-slf4j</artifactId>
+	<version>1.7.5</version>
+</dependency>
+```
+
+```java
+  SLF4JBridgeHandler.removeHandlersForRootLogger();
+  SLF4JBridgeHandler.install();
+```
+
 
     </textarea>
     <script src="http://gnab.github.io/remark/downloads/remark-0.5.7.min.js" type="text/javascript">
