@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Title</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <style type="text/css">
+
+    @import url(http://fonts.googleapis.com/css?family=Droid+Serif);
+    @import url(http://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+
+    body { font-family: 'Droid Serif'; }
+    h1, h2, h3 {
+      font-family: 'Yanone Kaffeesatz';
+      font-weight: 400;
+      margin-bottom: 0;
+      margin-top: 10px;
+    }
+    h1 { font-size: 3.5em; }
+    h2 { font-size: 3em; }
+    h3 { font-size: 1.6em; }
+
+    code {
+        -moz-border-radius: 5px;
+        -web-border-radius: 5px;
+        background: #e7e8e2;
+        border-radius: 5px;
+        //font-size: 16px;
+      }
+  
+
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+class: middle,center
+
+# Internationalization and Localization
+### I18N / L10N
+---
+
+# java.text.Format
+
+Formatting locale-sensitive information such as dates, messages, and numbers.
+```java
+public abstract class Format {
+  public final String format(Object obj) {}
+}
+```
+
+## SimpleDateFormat
+``` java
+  SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+  String timestamp = sdf.format(new Date());
+  Date gohome = sdf.parse("2013-10-22 17:00");
+```
+
+## MessageFormat
+``` java
+MessageFormat fmt = new MessageFormat("{0} minutes left till gohome.");
+Object[] args = {10};
+String msg = fmt.format(args);
+```
+---
+class: middle
+## Externalize all String
+
+Extract all language/location specific text into property files.
+
+### code
+```java
+public class MyApp {
+  private static final String DATE_FORMAT = "date.format"; 
+  private static final String MSG_FORMAT = "msg"; 
+
+  public MyApp() {
+    Properties props = new Properties();
+    props.load(this.getClass().getClassLoader().getResourceAsStream("myapp.properties"));
+    
+    String dateFormat = props.getProperty(DATE_FORMAT);
+    SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);
+    
+    String msgFormat = props.getProperty(MSG_FORMAT);
+    MessageFormat fmt = new MessageFormat(msgFormat);
+  }
+    
+}
+```
+
+### myapp.properties
+```
+date.format = yyyy-MM-dd HH:mm
+msg = {0} minutes left till gohome.
+```
+
+### i18n / l10n
+Now you can i18n and l10n your app by putting an alternative `myapp.properties` to the begining of the `classpath`
+
+
+---
+
+# java.util.PropertyResourceBundle
+
+### code
+```java
+public class GoHome {
+  private Locale loc = Locale.getDefault();
+  private ResourceBundle bundle = PropertyResourceBundle.getBundle("messages", loc);
+ 
+  public GoHome {
+    String welcomeMsg = bundle.getString("gohome.welcome");
+    String byeMsg = bundle.getString("gohome.bye");
+    String msgFormat = bundle.getString("gohome.msg");
+    
+    Object[] args = {getMinutesLeft()};
+    String msg = msgFormat.format(args);
+    
+  } 
+}
+```
+
+### messages.properties
+```
+gohome.welcome=Welcome in the GOHOME application!
+gohome.msg=minutes left till gohome: {0} 
+gohome.bye=Yooo biatch! 
+```
+
+---
+class: middle
+
+# java.util.ResourceBundle
+
+```java
+public abstract class ResourceBundle {
+  
+  public static ResourceBundle getBundle(String baseName,
+                                        Locale locale)
+
+}
+```
+
+### Bundle loading process
+
+the sequence of candidate bundle names is generated from the attribute values of the specified locale (language1, country1, and variant1) and of the default locale (language2, country2, and variant2):
+
+- baseName + "\_" + language1 + "\_" + country1 + "\_" + variant1
+- baseName + "\_" + language1 + "\_" + country1
+- baseName + "\_" + language1
+- baseName + "\_" + language2 + "\_" + country2 + "\_" + variant2
+- baseName + "\_" + language2 + "\_" + country2
+- baseName + "\_" + language2
+- baseName
+
+### messages_hu.properties
+```
+gohome.welcome=Isten hozott menjunk haza!
+gohome.msg=ma csak ennyit kell aludni: {0} 
+gohome.bye=leceljunk!
+```
+---
+# Character Encoding
+
+Let's see how some hungarian text can be printed.
+
+```java
+public static void main(String[] args) {
+  System.out.println("Árvíztűrő tükörfúrógép");
+}
+```
+It might work `on my computer` &trade; but it means you were just lucky.
+
+- You might not be able to `save` it
+- You might not be able to `compile` it
+- While running it might not be `displayed` as wanted
+
+### save
+
+check your editor `encoding settings`. Eclipse: 
+
+- single file: right-click/resources/Text file encoding.
+- for the whole workspace: `Prefernces/General/Workspace/Text File Encoding`
+
+### compile
+
+In command-line you can spcify it as parameter ` javac -encoding utf8 HungarianApp.java`.
+
+### display
+
+In commandline check you `terminal` settings. In eclipse: `Run Configurations ... / Java Application / Common tab / Encoding`
+
+---
+# Character encoding safely
+
+You can encode all special character even in ASCII (ISO-8859-1):
+
+```java
+public static void main(String[] args) {
+  System.out.println("\u00c1rv\u00edzt\u0171r\u0151 t\u00fck\u00f6rf\u00far\u00f3g\u00e9p");
+}
+```
+
+### converting to ASCII
+
+Even if you could save a java source file as utf8 all `java.util.Properties` file should be `ISO-8859-1` encoded.
+```
+native2ascii -encoding utf8 my_utf8_encodied.properties
+```
+
+### reverse
+do try this at home
+```
+echo "\u00c1rv\u00edzt\u0171r\u0151 t\u00fck\u00f6rf\u00far\u00f3g\u00e9p" | native2ascii -reverse
+```
+
+# Checklist
+
+- always set your `editor`s encoding when using special characters
+- convert the file into ACII / ISO-8859-1
+- always use `-encoding` according to your editor while using `native2ascii`
+
+    </textarea>
+    <script src="http://gnab.github.io/remark/downloads/remark-0.5.7.min.js" type="text/javascript">
+    </script>
+    <script type="text/javascript">
+      var slideshow = remark.create({
+//        highlightStyle: 'monokai'
+// highlightStyle: 'zenburn'
+// highlightStyle: 'vs'
+ highlightStyle: 'tomorrow-night'
+        
+      });
+    </script>
+  </body>
+</html>
