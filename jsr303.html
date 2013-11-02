@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Title</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <style type="text/css">
+
+    @import url(http://fonts.googleapis.com/css?family=Droid+Serif);
+    @import url(http://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+
+    body { font-family: 'Droid Serif'; }
+    h1, h2, h3 {
+      font-family: 'Yanone Kaffeesatz';
+      font-weight: 400;
+      margin-bottom: 0;
+      margin-top: 10px;
+    }
+    h1 { font-size: 3.5em; }
+    h2 { font-size: 3em; }
+    h3 { font-size: 1.6em; }
+
+    code {
+        -moz-border-radius: 5px;
+        -web-border-radius: 5px;
+        background: #e7e8e2;
+        border-radius: 5px;
+        //font-size: 16px;
+      }
+  
+
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+class: middle,center
+
+# JSR-303
+### Bean Validation / JEE6
+
+# JSR-349
+### Bean Validation 1.1 / JEE7
+---
+
+# Bean Validation
+
+```java
+public class Food {
+  @NotNull
+  private String id;
+
+  @NotNull @Length(min=3, max=15)
+  private String name;
+
+}
+```
+
+Its part of **Java EE 6** but can be used in standalone java. The reference implementaion is: [Hibernate Validator](http://docs.jboss.org/hibernate/validator/5.1/reference/en-US/html_single/)
+
+### pom.xml
+```xml
+<dependency>
+	<groupId>org.hibernate</groupId>
+	<artifactId>hibernate-validator</artifactId>
+	<version>4.2.0.Final</version>
+</dependency>
+
+<dependency>
+	<groupId>org.hibernate</groupId>
+	<artifactId>hibernate-core</artifactId>
+	<version>4.2.6.Final</version>
+</dependency>
+```
+
+### Validation api
+```java
+  Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+  Set<ConstraintViolation<Food>> validations = validator.validate(food);
+```
+
+---
+# Cascading validation
+
+### Adress
+```java
+ public class Address {
+  
+  @NotNull
+  private String street;
+
+  @NotNull
+  private String city;
+  
+  @Length(min=4, max=4)
+  private String zip; 
+}
+```
+
+### Restaurant 
+``` java
+public class Restaurant {
+
+  @NotNull
+  private String name;
+  
+  private String url;
+
+  @Valid
+  private Address address;
+  
+}
+```
+---
+# Custom I18N messages
+
+You could specify custom messages at `declaration` time, but it will be hardcoded.
+```java
+public class Car {
+    @NotNull(message = "The manufacturer name must not be null")
+    private String manufacturer;
+}
+```
+
+## Message Interpolation
+Hibernate's process to resolve location specific messages is decribe in the [docs](http://docs.jboss.org/hibernate/validator/5.1/reference/en-US/html_single/#section-message-interpolation). 
+Default validation messages are *backed in* into the hibernate-validator.jar file, in the following languages:
+
+- english
+- german
+- ...
+- hungarian
+
+## Missing Locale
+
+If your `Locale` doesn't have a built-in validationMessages.properties, or you want to customize the default one, 
+just place a properties file to the classpath
+
+### src/main/resources/org/hibernate/validator/ValidationMessages_hu.properties
+```
+o.h.v.constraints.Range.message = Az \u00E9rt\u00E9k {min} \u00E9s {max} k\u00F6z\u00F6tt legyen!
+```
+
+    </textarea>
+    <script src="http://gnab.github.io/remark/downloads/remark-0.5.7.min.js" type="text/javascript">
+    </script>
+    <script type="text/javascript">
+      var slideshow = remark.create({
+//        highlightStyle: 'monokai'
+// highlightStyle: 'zenburn'
+// highlightStyle: 'vs'
+ highlightStyle: 'tomorrow-night'
+        
+      });
+    </script>
+  </body>
+</html>
